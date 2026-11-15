@@ -97,7 +97,7 @@ async function loadMessages() {
     const card = document.createElement("div");
     card.className = "message-item";
 
-    // Format waktu agar mudah dibaca (Contoh: 15 Nov 2026, 14:30 WIB)
+    // Format waktu untuk tampilan Dashboard Admin
     let waktuFormatted = "Waktu tidak tersedia";
     if (item.created_at) {
       const d = new Date(item.created_at);
@@ -144,8 +144,9 @@ async function loadMessages() {
       });
     });
 
+    // Mengirim pesan DAN item.created_at ke fungsi downloadStory
     const story = makeButton("Unduh Story", () => {
-      downloadStory(editor.value.trim());
+      downloadStory(editor.value.trim(), item.created_at);
     });
 
     card.append(heading, status, editor, save, select, publish, reject, story);
@@ -176,10 +177,20 @@ async function updateMessage(id, changes) {
   await loadMessages();
 }
 
-async function downloadStory(message) {
+async function downloadStory(message, createdAt) {
   if (!message || !message.trim()) {
     alert("Pesan masih kosong.");
     return;
+  }
+
+  // Format waktu untuk dicetak di dalam gambar Story
+  let waktuStory = "";
+  if (createdAt) {
+    const d = new Date(createdAt);
+    const tanggal = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    const jam = String(d.getHours()).padStart(2, '0');
+    const menit = String(d.getMinutes()).padStart(2, '0');
+    waktuStory = `${tanggal}, ${jam}:${menit} WIB`;
   }
 
   const canvas = document.createElement("canvas");
@@ -292,10 +303,19 @@ async function downloadStory(message) {
     ctx.fillText(line, 165, startY + index * lineHeight);
   });
 
+  // Tanda Tangan Anonim di pojok kiri bawah kartu
   ctx.fillStyle = muted;
   ctx.font = "italic 25px Georgia";
   ctx.textAlign = "left";
   ctx.fillText("— anonymous ♡", 165, y + h - 65);
+
+  // Tanggal & Jam Kirim di pojok kanan bawah kartu
+  if (waktuStory) {
+    ctx.fillStyle = muted;
+    ctx.font = "20px Arial";
+    ctx.textAlign = "right";
+    ctx.fillText(waktuStory, x + w - 45, y + h - 65);
+  }
 
   ctx.textAlign = "center";
   ctx.fillStyle = ink;
