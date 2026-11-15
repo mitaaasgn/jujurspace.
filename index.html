@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jujur Space Adkesma</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header>
+  <h1>JUJUR SPACE</h1>
+  <p>Berani Bersuara,Nyaman Bercerita</p>
+</header>
+
+<main>
+  <section id="home" class="card">
+    <h2>Hai, Mahasiswa!👋</h2>
+    <p>
+Selamat datang di Jujur Space, ruang untuk berbagi cerita, menyampaikan aspirasi, dan menyuarakan isi hati.
+
+Apa pun yang ingin kamu sampaikan, jangan ragu untuk bercerita. Karena setiap suara berarti dan setiap cerita layak didengar.
+
+Yuk, bersuara. Kami siap mendengarkan! ♡
+
+Your Voice, Your Story, Your Space.Sampaikan cerita,pengalaman,kritik, saran,pertanyaan atau aspirasi secara anonim.</p>
+
+    <form id="messageForm">
+      <textarea id="message" placeholder="Tuliskan pesanmu di sini..." required maxlength="2000"></textarea>
+      <button type="submit">Kirim Pesan</button>
+    </form>
+    <p id="messageStatus"></p>
+  </section>
+
+  <section id="adminLogin" class="card">
+    <h2>Login Admin</h2>
+    <input type="email" id="email" placeholder="Email admin">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginButton">Login</button>
+    <p id="loginStatus"></p>
+  </section>
+
+  <section id="dashboard" class="card" hidden>
+    <h2>Dashboard Admin</h2>
+    <button id="logoutButton">Logout</button>
+    <div id="messageList"></div>
+  </section>
+</main>
+
+<footer>
+  <p>Adkesma BEM_KM Unidha| Jujur Space</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
