@@ -1,4 +1,3 @@
-
 const SUPABASE_URL = "https://nirbqcefmjyzklgcramp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kohKTncsKjy9ziQQ5JgEsg_LgVi-BpP";
 
@@ -98,8 +97,20 @@ async function loadMessages() {
     const card = document.createElement("div");
     card.className = "message-item";
 
+    // Format waktu agar mudah dibaca (Contoh: 15 Nov 2026, 14:30 WIB)
+    let waktuFormatted = "Waktu tidak tersedia";
+    if (item.created_at) {
+      const d = new Date(item.created_at);
+      const tanggal = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      const jam = String(d.getHours()).padStart(2, '0');
+      const menit = String(d.getMinutes()).padStart(2, '0');
+      waktuFormatted = `${tanggal}, ${jam}:${menit} WIB`;
+    }
+
     const heading = document.createElement("h3");
-    heading.textContent = "";
+    heading.textContent = `📅 ${waktuFormatted}`;
+    heading.style.fontSize = "14px";
+    heading.style.color = "#666";
 
     const status = document.createElement("p");
     status.textContent = "Status: " + item.status;
@@ -165,7 +176,6 @@ async function updateMessage(id, changes) {
   await loadMessages();
 }
 
-
 async function downloadStory(message) {
   if (!message || !message.trim()) {
     alert("Pesan masih kosong.");
@@ -178,18 +188,15 @@ async function downloadStory(message) {
 
   const ctx = canvas.getContext("2d");
 
-  // Warna dasar
   const bg = "#F5F0E8";
   const ink = "#51465D";
   const muted = "#897C91";
   const lavender = "#E8DFEB";
   const pink = "#EAD7D9";
 
-  // Latar belakang
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, 1080, 1920);
 
-  // Ornamen lingkaran lembut
   ctx.fillStyle = pink;
   ctx.beginPath();
   ctx.arc(1010, 250, 170, 0, Math.PI * 2);
@@ -200,7 +207,6 @@ async function downloadStory(message) {
   ctx.arc(70, 1660, 190, 0, Math.PI * 2);
   ctx.fill();
 
-  // Judul atas
   ctx.textAlign = "center";
   ctx.fillStyle = muted;
   ctx.font = "bold 25px Arial";
@@ -214,7 +220,6 @@ async function downloadStory(message) {
   ctx.font = "italic 30px Georgia";
   ctx.fillText("your voice matters ♡", 540, 390);
 
-  // Kartu pesan
   const x = 105;
   const y = 540;
   const w = 870;
@@ -234,13 +239,11 @@ async function downloadStory(message) {
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.fill();
 
-  // Label kartu
   ctx.textAlign = "left";
   ctx.fillStyle = muted;
   ctx.font = "bold 24px Arial";
   ctx.fillText("SUARA MAHASISWA", 165, 635);
 
-  // Membungkus teks pesan
   const maxWidth = 750;
   const words = message.trim().split(/\s+/);
   let fontSize = 48;
@@ -266,12 +269,9 @@ async function downloadStory(message) {
     return result;
   }
 
-  // Sesuaikan ukuran tulisan
   while (fontSize > 32) {
     lines = makeLines(fontSize);
-
     if (lines.length <= 12) break;
-
     fontSize -= 2;
   }
 
@@ -280,7 +280,6 @@ async function downloadStory(message) {
     return;
   }
 
-  // Tampilkan pesan
   ctx.fillStyle = ink;
   ctx.textAlign = "left";
   ctx.font = fontSize + "px Georgia";
@@ -293,13 +292,11 @@ async function downloadStory(message) {
     ctx.fillText(line, 165, startY + index * lineHeight);
   });
 
-  // Identitas anonim
   ctx.fillStyle = muted;
   ctx.font = "italic 25px Georgia";
   ctx.textAlign = "left";
   ctx.fillText("— anonymous ♡", 165, y + h - 65);
 
-  // Footer
   ctx.textAlign = "center";
   ctx.fillStyle = ink;
   ctx.font = "bold 27px Arial";
@@ -309,78 +306,26 @@ async function downloadStory(message) {
   ctx.font = "italic 26px Georgia";
   ctx.fillText("Setiap suara punya ruang untuk didengar.", 540, 1710);
 
-  // Unduh gambar
   canvas.toBlob(function(blob) {
-  if (!blob) {
-    alert("Gagal membuat gambar.");
-    return;
-  }
-
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "Jujur-Space-Story.png";
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(function() {
-    URL.revokeObjectURL(url);
-  }, 10000);
-
-}, "image/png");
-}
-
-
-  const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1920;
-
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "#233c63";
-  ctx.fillRect(0, 0, 1080, 1920);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.font = "bold 65px Arial";
-  ctx.fillText("JUJUR SPACE", 540, 250);
-
-  ctx.font = "38px Arial";
-  ctx.fillText("anonymous", 540, 330);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "left";
-  ctx.font = "42px Arial";
-
-  const words = message.split(/\s+/);
-  let line = "";
-  let y = 850;
-
-  words.forEach((word) => {
-    const test = line + word + " ";
-    if (ctx.measureText(test).width > 850) {
-      ctx.fillText(line, 115, y);
-      line = word + " ";
-      y += 65;
-    } else {
-      line = test;
+    if (!blob) {
+      alert("Gagal membuat gambar.");
+      return;
     }
-  });
 
-  ctx.fillText(line, 115, y);
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Jujur-Space-Story.png";
 
-  ctx.textAlign = "center";
-  ctx.font = "30px Arial";
-  ctx.fillText("ADKESMA BEM", 540, 1750);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 
-  const link = document.createElement("a");
-  link.download = "jujur-space-story.png";
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-
+    setTimeout(function() {
+      URL.revokeObjectURL(url);
+    }, 10000);
+  }, "image/png");
+}
 
 document.getElementById("logoutButton").addEventListener("click", async () => {
   await db.auth.signOut();
